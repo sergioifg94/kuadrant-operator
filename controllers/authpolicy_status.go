@@ -109,6 +109,9 @@ func (r *AuthPolicyReconciler) availableCondition(targetNetworkObjectKind string
 		// Invalid
 		case errors.As(specErr, &common.ErrInvalid{}):
 			cond.Reason = string(gatewayapiv1alpha2.PolicyReasonInvalid)
+		// Conflicted
+		case errors.As(specErr, &common.ErrConflict{}):
+			cond.Reason = string(gatewayapiv1alpha2.PolicyReasonConflicted)
 		default:
 			cond.Reason = "ReconciliationError"
 		}
