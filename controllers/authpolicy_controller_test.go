@@ -84,7 +84,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// check istio authorizationpolicy
 			iapKey := types.NamespacedName{Name: istioAuthorizationPolicyName(testGatewayName, policy.Spec.TargetRef), Namespace: testNamespace}
@@ -161,7 +161,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(policy), 60*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(policy), 60*time.Second, 5*time.Second).Should(BeTrue())
 
 			// check authorino authconfig hosts
 			authConfigKey := types.NamespacedName{Name: authConfigName(client.ObjectKeyFromObject(policy)), Namespace: testNamespace}
@@ -197,7 +197,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// check istio authorizationpolicy
 			iapKey := types.NamespacedName{Name: istioAuthorizationPolicyName(testGatewayName, policy.Spec.TargetRef), Namespace: testNamespace}
@@ -257,7 +257,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(routePolicy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(routePolicy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// create second (policyless) httproute
 			otherRoute := testBuildBasicHttpRoute("policyless-route", testGatewayName, testNamespace, []string{"*.other"})
@@ -296,7 +296,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(gwPolicy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(gwPolicy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// check istio authorizationpolicy
 			iapKey := types.NamespacedName{Name: istioAuthorizationPolicyName(testGatewayName, gwPolicy.Spec.TargetRef), Namespace: testNamespace}
@@ -357,7 +357,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(routePolicy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(routePolicy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// attach policy to the gatewaay
 			gwPolicy := &api.AuthPolicy{
@@ -387,7 +387,7 @@ var _ = Describe("AuthPolicy controller", func() {
 				if err != nil {
 					return false
 				}
-				condition := meta.FindStatusCondition(existingPolicy.Status.Conditions, APAvailableConditionType)
+				condition := meta.FindStatusCondition(existingPolicy.Status.Conditions, string(gatewayapiv1alpha2.PolicyConditionAccepted))
 				return condition != nil && condition.Reason == "AuthSchemeNotReady"
 			}, 30*time.Second, 5*time.Second).Should(BeTrue())
 
@@ -444,7 +444,7 @@ var _ = Describe("AuthPolicy controller", func() {
 				if err != nil {
 					return false
 				}
-				condition := meta.FindStatusCondition(existingPolicy.Status.Conditions, APAvailableConditionType)
+				condition := meta.FindStatusCondition(existingPolicy.Status.Conditions, string(gatewayapiv1alpha2.PolicyConditionAccepted))
 				return condition != nil && condition.Reason == "ReconciliationError" && strings.Contains(condition.Message, "cannot match any route rules, check for invalid route selectors in the policy")
 			}, 30*time.Second, 5*time.Second).Should(BeTrue())
 
@@ -503,7 +503,7 @@ var _ = Describe("AuthPolicy controller", func() {
 				if err != nil {
 					return false
 				}
-				condition := meta.FindStatusCondition(existingPolicy.Status.Conditions, APAvailableConditionType)
+				condition := meta.FindStatusCondition(existingPolicy.Status.Conditions, string(gatewayapiv1alpha2.PolicyConditionAccepted))
 				return condition != nil && condition.Reason == "ReconciliationError" && strings.Contains(condition.Message, "cannot match any route rules, check for invalid route selectors in the policy")
 			}, 30*time.Second, 5*time.Second).Should(BeTrue())
 
@@ -550,7 +550,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// delete policy
 			err = k8sClient.Delete(context.Background(), policy)
@@ -803,7 +803,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// check authorino authconfig
 			authConfigKey := types.NamespacedName{Name: authConfigName(client.ObjectKeyFromObject(policy)), Namespace: testNamespace}
@@ -850,7 +850,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// check istio authorizationpolicy
 			iapKey := types.NamespacedName{Name: istioAuthorizationPolicyName(testGatewayName, policy.Spec.TargetRef), Namespace: testNamespace}
@@ -958,7 +958,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// check istio authorizationpolicy
 			iapKey := types.NamespacedName{Name: istioAuthorizationPolicyName(testGatewayName, policy.Spec.TargetRef), Namespace: testNamespace}
@@ -1067,7 +1067,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// check istio authorizationpolicy
 			iapKey := types.NamespacedName{Name: istioAuthorizationPolicyName(testGatewayName, policy.Spec.TargetRef), Namespace: testNamespace}
@@ -1203,7 +1203,7 @@ var _ = Describe("AuthPolicy controller", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			// check policy status
-			Eventually(testPolicyIsReady(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
+			Eventually(testPolicyIsAccepted(policy), 30*time.Second, 5*time.Second).Should(BeTrue())
 
 			// check authorino authconfig
 			authConfigKey := types.NamespacedName{Name: authConfigName(client.ObjectKeyFromObject(policy)), Namespace: testNamespace}
@@ -1285,10 +1285,10 @@ func testBasicAuthScheme() api.AuthSchemeSpec {
 	}
 }
 
-func testPolicyIsReady(policy *api.AuthPolicy) func() bool {
+func testPolicyIsAccepted(policy *api.AuthPolicy) func() bool {
 	return func() bool {
 		existingPolicy := &api.AuthPolicy{}
 		err := k8sClient.Get(context.Background(), client.ObjectKeyFromObject(policy), existingPolicy)
-		return err == nil && meta.IsStatusConditionTrue(existingPolicy.Status.Conditions, "Available")
+		return err == nil && meta.IsStatusConditionTrue(existingPolicy.Status.Conditions, string(gatewayapiv1alpha2.PolicyConditionAccepted))
 	}
 }
