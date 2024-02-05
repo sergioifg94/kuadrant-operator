@@ -13,6 +13,7 @@ PROJECT_PATH := $(patsubst %/,%,$(dir $(MKFILE_PATH)))
 # - use the VERSION as arg of the bundle target (e.g make bundle VERSION=0.0.2)
 # - use environment variables to overwrite this value (e.g export VERSION=0.0.2)
 VERSION ?= 0.0.0
+VERSION = unified_kuadrant #ToDo(mnairn) Remove this before merge
 
 # CHANNELS define the bundle channels used in the bundle.
 # Add a new line here if you would like to change its default config. (E.g CHANNELS = "candidate,fast,stable")
@@ -54,6 +55,7 @@ else
 BUNDLE_VERSION = 0.0.0
 IMAGE_TAG ?= $(DEFAULT_IMAGE_TAG)
 endif
+IMAGE_TAG = unified_kuadrant  #ToDo(mnairn) Remove this before merge
 
 # BUNDLE_IMG defines the image:tag used for the bundle.
 # You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
@@ -140,6 +142,8 @@ LIMITADOR_OPERATOR_BUNDLE_IMG ?= quay.io/kuadrant/limitador-operator-bundle:$(LI
 ## kuadrant dns
 #ToDo Pin this version once we have an initial release of kuadrant dns
 KUADRANT_DNS_OPERATOR_VERSION ?= latest
+KUADRANT_DNS_OPERATOR_VERSION = unified_kuadrant #ToDo(mnairn) Remove this before merge
+
 limitador_bundle_is_semantic := $(call is_semantic_version,$(KUADRANT_DNS_OPERATOR_VERSION))
 ifeq (latest,$(KUADRANT_DNS_OPERATOR_VERSION))
 KUADRANT_DNS_OPERATOR_BUNDLE_VERSION = 0.0.0
@@ -397,7 +401,7 @@ uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified 
 deploy: manifests dependencies-manifests kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
 	$(KUSTOMIZE) build config/deploy | kubectl apply -f -
-	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMAGE_TAG_BASE):latest
+	#cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMAGE_TAG_BASE):latest #ToDo(mnairn) Uncomment this before merge
 
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/deploy | kubectl delete -f -

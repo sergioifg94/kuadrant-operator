@@ -86,8 +86,8 @@ metadata:
       ]
     capabilities: Basic Install
     categories: Integration & Delivery
-    containerImage: quay.io/kuadrant/kuadrant-operator:latest
-    createdAt: "2024-02-05T15:37:28Z"
+    containerImage: 'quay.io/kuadrant/kuadrant-operator:unified_kuadrant  '
+    createdAt: "2024-02-06T14:52:21Z"
     operators.operatorframework.io/builder: operator-sdk-v1.28.1
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
     repository: https://github.com/Kuadrant/kuadrant-operator
@@ -577,7 +577,7 @@ spec:
                 env:
                 - name: RELATED_IMAGE_WASMSHIM
                   value: oci://quay.io/kuadrant/wasm-shim:latest
-                image: quay.io/kuadrant/kuadrant-operator:latest
+                image: quay.io/kuadrant/kuadrant-operator:unified_kuadrant
                 livenessProbe:
                   httpGet:
                     path: /healthz

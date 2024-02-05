@@ -1,5 +1,5 @@
 resources:
-- github.com/kuadrant/kuadrant-dns-operator/config/default?ref=main
+- github.com/kuadrant/kuadrant-dns-operator/config/default?ref=unified_kuadrant 
 
 patches:
   - path: deployment_patch.yaml
